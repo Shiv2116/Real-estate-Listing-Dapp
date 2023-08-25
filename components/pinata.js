@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { 
     
-    pinatajwt,
+    gatewayjwt,
     readHeader,
     getHeader,
     sendJsonHeader,
@@ -11,7 +11,7 @@ import {
      } from './config.js';
 
 
-export async function sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCity,getCountry,getZip,getHoa,getInfo,getFloor,getBath,getRoom,getGarage,getSellerName,getSellerEmail,getSellerPhone ) {
+export async function sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCity,getCountry,getZip,getHoa,getInfo,getFloor,getBath,getRoom,getGarage,getSellerName,getSellerEmail,getSellerPhone,picCid ) {
     const fetchdate = await getDate()
     const listdate = fetchdate.dateValue;
     const url = 'https://api.pinata.cloud/pinning/pinJSONToIPFS';
@@ -41,6 +41,7 @@ export async function sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCit
           "Email": getSellerEmail,
           "Phone": getSellerPhone,
           "Listed": listdate,
+          "Photo": "https://"+ ipfsgateway + ".mypinata.cloud/ipfs/"+picCid+ "?pinataGatewayToken=",
           // "Picture" : "https://" + ipfsgateway + ".mypinata.cloud/ipfs/" + picture + '?pinataGatewayToken='
         }
     }});
@@ -58,16 +59,16 @@ PINATA IPFS FUNCTION TO GET THE FILES CID's
 
 
 export async function getFileFromIPFS() {
-    const queryFilter = "metadata[name]=listed";
-    const url = "https://api.pinata.cloud/data/pinList?" + queryFilter;
-    const resFile = await axios.get(url, getHeader)
-    const response = resFile.data.rows;
-    const output = response.map((value) => {
-      let getCid = value.ipfs_pin_hash;
-      return getCid;
-    })
-    return output;
-  } 
+  const queryFilter = "metadata=[name]=listdata";
+  const url = "https://api.pinata.cloud/data/pinList?" + queryFilter;
+  const fetchFile = await axios.get(url, getHeader);
+  const response = fetchFile.data.rows;
+  const output = response.map((value) => {
+    let getCid = value.ipfs_pin_hash;
+    return getCid;
+  });
+  return output;
+} 
 
 /*
 
@@ -82,7 +83,7 @@ export async function readFileFromIPFS() {
     let i = 0;
     for (i; i < output.length; i++) {
         const value = output[i];
-        const ipfsPath = "https://" + ipfsgateway + ".mypinata.cloud/ipfs/" + value + '?pinataGatewayToken=' + pinatajwt;
+        const ipfsPath = "https://" + ipfsgateway + ".mypinata.cloud/ipfs/" + value + '?pinataGatewayToken=' +gatewayjwt;
         const info = await axios.get(ipfsPath, readHeader);
         console.log(info.data.PropertyInfo)
         listArray.push(info.data.PropertyInfo);

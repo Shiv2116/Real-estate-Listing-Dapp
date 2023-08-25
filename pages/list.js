@@ -1,15 +1,20 @@
 
 import { sendFileToIPFS, sendJSONToIPFS } from "@/components/pinata";
-
+import { useState } from "react";
+import { ipfsgateway,gatewayjwt } from "@/components/config";
 
 export default function List() {
+const [picCid, getPicCid] = useState("");
+const [picture,getPicture] = useState("pinatalogo.png");
 
 
 async function updatePic(e){
 
   const file = e.target.files[0];
   const getCid = await sendFileToIPFS(file);
-  console.log(getCid);
+  getPicCid(getCid);
+  const ipfsPath = "https://"+ ipfsgateway + ".mypinata.cloud/ipfs/"+getCid+ "?pinataGatewayToken="+gatewayjwt;
+getPicture(ipfsPath);
 }
 
 async function listProperty() {
@@ -29,10 +34,10 @@ async function listProperty() {
   let getSellerName = document.getElementById("sellername").value.toString();
   let getSellerEmail = document.getElementById("selleremail").value.toString();
   let getSellerPhone = document.getElementById("sellerphone").value.toString();
-  if(!getTitle|| !getPrice || !getYear || !getHoa || !getAddress || !getCity || !getCountry || !getZip || !getInfo || !getFloor || !getRoom || !getBath || !getGarage || !getSellerName || !getSellerEmail || !getSellerPhone){
+  if(!getTitle|| !getPrice || !getYear || !getHoa || !getAddress || !getCity || !getCountry || !getZip || !getInfo || !getFloor || !getRoom || !getBath || !getGarage || !getSellerName || !getSellerEmail || !getSellerPhone || !picCid){
     return
   }
-  const receipt = await sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCity,getCountry,getZip,getHoa,getInfo,getFloor,getBath,getRoom,getGarage,getSellerName,getSellerEmail,getSellerPhone)
+  const receipt = await sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCity,getCountry,getZip,getHoa,getInfo,getFloor,getBath,getRoom,getGarage,getSellerName,getSellerEmail,getSellerPhone,picCid);
   
 
 
@@ -374,7 +379,7 @@ async function listProperty() {
         <div className="row d-flex">
                 <img
                   className="bd-placeholder-img"
-                  
+                  src={picture}
                   width="100%"
                   height="100%"
                   aria-hidden="true"
