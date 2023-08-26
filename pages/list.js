@@ -38,8 +38,14 @@ async function listProperty() {
     return
   }
   const receipt = await sendJSONToIPFS(getTitle,getPrice,getYear,getAddress,getCity,getCountry,getZip,getHoa,getInfo,getFloor,getBath,getRoom,getGarage,getSellerName,getSellerEmail,getSellerPhone,picCid);
-  
-
+  if (receipt == 'complete'){
+    let confirmation = 'Listed Successfully';
+    document.getElementById('displayresult').innerHTML = confirmation;
+  }
+  else{
+    let confirmation = 'Error Listing';
+    document.getElementById('displayresult').innerHTML = confirmation;
+  }
 
 }
 
