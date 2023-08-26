@@ -32,7 +32,7 @@ export default function Home() {
       <div className="col">
         <div className="card overflow-hidden rounded-4 shadow-lg" >
           <div className="d-flex flex-column p-3 pb-0 text-shadow-1">
-            <img className="overflow-hidden  rounded-4 shadow-lg" src={ list?.picture + gatewayjwt} style={{maxWidth:'500px', maxHeight:'500px'}}/>
+            <img className="overflow-hidden  rounded-4 shadow-lg" src={ (list?.Photo || list?.picture) + gatewayjwt} style={{maxWidth:'500px', maxHeight:'500px'}}/>
             <ul className="d-flex list-unstyled mt-auto">
               <li className="d-flex align-items-center me-1 mt-1">
               <img src="map-solid.svg" alt="twbs" width="30" height="30" className="flex-shrink-0"/>
